@@ -1,0 +1,25 @@
+<%= form_with model: post, class: "space-y-8 max-w-4xl" do |form| %>
+    <% if form.object.errors.any? %>
+        <div class="p-4 bg-red-50 border border-red-100 rounded-xl">
+            <p class="text-sm font-bold text-red-600">
+                <%= form.object.errors.full_messages.first %>
+            </p>
+        </div>
+    <% end %>
+
+    <div class="space-y-2">
+        <%= form.label :title, class: "block text-sm font-bold text-gray-700 uppercase tracking-wider" %>
+        <%= form.text_field :title, placeholder: "Title", class: "block w-full text-4xl font-extrabold border-0 border-b border-transparent focus:border-gray-100 focus:ring-0 placeholder-gray-300 transition-colors p-0 pb-2" %>
+    </div>
+
+    <div class="space-y-2 min-h-[400px]">
+        <%= form.label :content, class: "block text-sm font-bold text-gray-700 uppercase tracking-wider mb-4" %>
+        <div class="prose prose-lg max-w-none">
+            <%= form.rich_textarea :content, class: "block w-full border-0 focus:ring-0 min-h-[400px] placeholder-gray-300" %>
+        </div>
+    </div>
+
+    <div class="pt-8 border-t border-gray-100">
+        <%= form.submit class: "inline-flex items-center px-6 py-3 border border-transparent text-base font-bold rounded-full shadow-sm text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-all cursor-pointer" %>
+    </div>
+<% end %>

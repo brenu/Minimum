@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+    --color-brand-primary: #1e40af;
+    --color-brand-accent: #f59e0b;
+    --font-display: "Helvetica Neue", sans-serif;
+}
+
+@layer components {
+  .prose {
+    @apply max-w-none text-gray-700 leading-relaxed;
+  }
+  .prose h1 { @apply text-3xl font-bold text-gray-900 mt-8 mb-4; }
+  .prose h2 { @apply text-2xl font-bold text-gray-900 mt-6 mb-3; }
+  .prose h3 { @apply text-xl font-bold text-gray-900 mt-5 mb-2; }
+  .prose p { @apply mb-4; }
+  .prose ul { @apply list-disc pl-5 mb-4; }
+  .prose ol { @apply list-decimal pl-5 mb-4; }
+  .prose blockquote { @apply border-l-4 border-gray-200 pl-4 italic my-4; }
+}

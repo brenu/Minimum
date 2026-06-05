@@ -1,0 +1,78 @@
+<div class="max-w-3xl mx-auto">
+  <header class="mb-10">
+    <%= link_to blog_path(id: @blog.id), class: "inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8 group" do %>
+      <svg class="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+      Back to <%= @blog.name %>
+    <% end %>
+
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight mb-6"><%= @post.title %></h1>
+
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-lg">
+        <%= @post.blog.user.email_address[0].upcase %>
+      </div>
+      <div>
+        <div class="text-base font-bold text-gray-900">
+          <%= @post.blog.user.email_address.split('@').first %>
+        </div>
+        <div class="text-sm text-gray-500">
+          <time datetime="<%= @post.created_at.iso8601 %>"><%= @post.created_at.strftime("%b %d, %Y") %></time>
+          <span class="mx-1">·</span>
+          <span><%= (@post.content.body.to_plain_text.split.size / 200.0).ceil %> min read</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <article class="prose prose-lg prose-gray max-w-none mb-20">
+    <%= @post.content %>
+  </article>
+
+  <section class="border-t border-gray-200 pt-16 pb-20">
+    <div class="flex items-center justify-between mb-10">
+      <h2 class="text-2xl font-bold text-gray-900">Responses (<%= @comments.size %>)</h2>
+    </div>
+
+    <div class="mb-12">
+      <h3 class="text-sm font-bold uppercase tracking-wider text-gray-500 mb-6">Leave a response</h3>
+      <%= form_with model: @comment, url: post_comments_path(post_id: @post.id), class: "space-y-4 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm" do |form| %>
+        <div>
+          <%= form.text_area :message, placeholder: "What are your thoughts?", rows: 3, class: "block w-full border-0 focus:ring-0 text-gray-900 placeholder-gray-400 sm:text-base resize-none" %>
+        </div>
+        <div class="flex justify-end pt-2 border-t border-gray-50">
+          <%= form.submit "Respond", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors cursor-pointer" %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="space-y-8">
+      <% @comments.each do |comment| %>
+        <article class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <header class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 font-bold text-xs">
+                <%= comment.user.email_address[0].upcase %>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-gray-900"><%= comment.user.email_address.split('@').first %></div>
+                <div class="text-xs text-gray-500"><%= time_ago_in_words(comment.created_at) %> ago</div>
+              </div>
+            </div>
+            <% if authenticated? and comment.user_id == @current_user.id then %>
+              <%= button_to comment_path(id: comment.id), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "text-gray-400 hover:text-red-600 transition-colors" do %>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+              <% end %>
+            <% end %>
+          </header>
+          <div class="text-gray-700 leading-relaxed">
+            <%= comment.message %>
+          </div>
+        </article>
+      <% end %>
+      
+      <% if @comments.empty? %>
+        <p class="text-center text-gray-500 py-10 italic">Be the first to respond to this post.</p>
+      <% end %>
+    </div>
+  </section>
+</div>
